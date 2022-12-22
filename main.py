@@ -1,4 +1,6 @@
 import os
+import requests
+import io
 
 from google.api_core.client_options import ClientOptions
 from google.cloud import documentai
@@ -8,6 +10,7 @@ project_id = 'conductive-bank-365208'
 location = 'us'  # Format is 'us' or 'eu'
 processor_id = '34e550bda24b8927'  # Create processor before running sample
 file_path = './data/lab_result_1.png'
+file_url = 'https://s3.ap-southeast-1.amazonaws.com/admin.marika.cafe/icons/lab_result_1.png'
 # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
 mime_type = 'image/png'
 
@@ -26,9 +29,12 @@ def quickstart(
     # projects/project_id/locations/location/processor/processor_id
     name = client.processor_path(project_id, location, processor_id)
 
+    image = requests.get(file_url)
+    image_content = io.BytesIO(image.content).getvalue()
+
     # Read the file into memory
-    with open(file_path, "rb") as image:
-        image_content = image.read()
+    # with open(file_path, "rb") as image:
+    #     image_content = image.read()
 
     # Load Binary Data into Document AI RawDocument Object
     raw_document = documentai.RawDocument(
