@@ -2,13 +2,14 @@ import os
 
 from google.api_core.client_options import ClientOptions
 from google.cloud import documentai
+from documentai_helpers import print_blocks, print_detected_langauges, print_page_dimensions, print_paragraphs, print_lines, print_tokens, print_image_quality_scores
 
-# TODO(developer): Uncomment these variables before running the sample.
-# project_id = 'YOUR_PROJECT_ID'
-# location = 'YOUR_PROCESSOR_LOCATION' # Format is 'us' or 'eu'
-# processor_id = 'YOUR_PROCESSOR_ID' #  Create processor before running sample
-# file_path = '/path/to/local/pdf'
-# mime_type = 'application/pdf' # Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+project_id = 'conductive-bank-365208'
+location = 'us'  # Format is 'us' or 'eu'
+processor_id = '34e550bda24b8927'  # Create processor before running sample
+file_path = './data/lab_result_1.png'
+# Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
+mime_type = 'image/png'
 
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './service_account/medical_lab_sa.json'
 
@@ -41,10 +42,22 @@ def quickstart(
     # For a full list of Document object attributes, please reference this page:
     # https://cloud.google.com/python/docs/reference/documentai/latest/google.cloud.documentai_v1.types.Document
     document = result.document
-
+    text = document.text
     # Read the text recognition output from the processor
     print("The document contains the following text:")
-    print(document.text)
+    print(text)
+    for page in document.pages:
+        print(f"Page {page.page_number}:")
+        print_page_dimensions(page.dimension)
+        print_detected_langauges(page.detected_languages)
+        print_paragraphs(page.paragraphs, text)
+        print_blocks(page.blocks, text)
+        print_lines(page.lines, text)
+        print_tokens(page.tokens, text)
+
+        # Currently supported in version pretrained-ocr-v1.1-2022-09-12
+        if page.image_quality_scores:
+            print_image_quality_scores(page.image_quality_scores)
 
 
 quickstart(project_id="conductive-bank-365208", location="us", processor_id="34e550bda24b8927",

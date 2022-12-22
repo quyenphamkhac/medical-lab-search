@@ -4,18 +4,6 @@ from typing import Sequence
 from google.api_core.client_options import ClientOptions
 from google.cloud import documentai
 
-# TODO(developer): Uncomment these variables before running the sample.
-project_id = 'conductive-bank-365208'
-location = 'us'  # Format is 'us' or 'eu'
-processor_id = '34e550bda24b8927'  # Create processor before running sample
-# Refer to https://cloud.google.com/document-ai/docs/manage-processor-versions for more information
-processor_version = 'rc'
-file_path = './data/lab_result_1.png'
-# Refer to https://cloud.google.com/document-ai/docs/file-types for supported file types
-mime_type = 'image/png'
-
-os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = './service_account/medical_lab_processor.json'
-
 
 def process_document_ocr_sample(
     project_id: str,
