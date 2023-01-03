@@ -1,5 +1,5 @@
 from thefuzz import process
-from typing import List
+from typing import List, Union
 
 samples = [
     "Yêu cầu xét nghiệm",
@@ -153,4 +153,33 @@ def find_best_match(keyword: str, choices: List[str]):
     return best_match
 
 
-print('best match', find_best_match('RBC', samples))
+def find_best_match_by_user_input(keyword: str, choices: List[str]):
+    lab_name = find_best_match_lab(keyword=keyword)
+    if lab_name is None:
+        return None
+    return find_best_match(lab_name, choices=choices)
+
+
+def find_lab_by_name(lab_other_name: str) -> Union[str, None]:
+    for key in master_data:
+        other_names = master_data[key].get('other_names') or []
+        if lab_other_name in other_names:
+            return key
+
+    return None
+
+
+def find_best_match_lab(keyword: str) -> Union[str, None]:
+    choices = []
+    for key in master_data:
+        other_names = master_data[key].get('other_names') or []
+        choices = choices + other_names
+    best_match = process.extractOne(keyword, choices=choices)
+    if best_match is not None:
+        lab_name = best_match[0]
+        return find_lab_by_name(lab_name)
+    else:
+        return None
+
+
+print(find_best_match_by_user_input('rrrbc nè', samples))
