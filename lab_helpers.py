@@ -45,7 +45,7 @@ LAB_NAMES = {
     'PCT': 'PCT'
 }
 
-OCR_LINES = [
+samples = [
     "Yêu cầu xét nghiệm",
     "Kết quả",
     "Tổng phân tích tế bào máu ngoại vi (bằng máy đếm laser)",
@@ -199,4 +199,4 @@ def find_best_match(keyword: str, choices: List[str]):
     return best_match
 
 
-print(find_best_match('1', OCR_LINES))
+print(find_best_match('RBC', samples))
