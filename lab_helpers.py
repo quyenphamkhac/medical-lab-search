@@ -176,6 +176,13 @@ samples = [
     "7"
 ]
 
+master_data = {
+    "RBC": {
+        "name": "RBC",
+        "other_names": ["RBC", "Số lượng hồng cầu", "red blood cell"]
+    }
+}
+
 
 def find_best_match_lab(text: str) -> str:
     best_match_lab_name = ''
@@ -195,8 +202,16 @@ def preprocessing_lines(lines: List[str]) -> List[str]:
 
 
 def find_best_match(keyword: str, choices: List[str]):
-    best_match = process.extractOne(keyword, choices=choices)
+    other_names = master_data[keyword].get('other_names')
+    matches = []
+    for name in other_names or []:
+        print('key: ', name)
+        match = process.extractOne(name, choices=choices)
+        print('match: ', match)
+        matches.append(match)
+    matches.sort(key=lambda a: a[1])
+    best_match = matches.pop()
     return best_match
 
 
-print(find_best_match('RBC', samples))
+print('best match', find_best_match('RBC', samples))
