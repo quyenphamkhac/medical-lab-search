@@ -1,5 +1,5 @@
 from thefuzz import process
-from typing import List, Union
+from typing import List, Union, Dict
 
 samples = [
     "Yêu cầu xét nghiệm",
@@ -140,6 +140,18 @@ master_data = {
 }
 
 
+def create_reversed_data() -> Dict[str, str]:
+    reversed_mapping = {}
+    for key in master_data:
+        other_names = master_data[key].get('other_names') or []
+        for name in other_names:
+            reversed_mapping[name] = key
+    return reversed_mapping
+
+
+reversed_master_data = create_reversed_data()
+
+
 def find_best_match(keyword: str, choices: List[str]):
     other_names = master_data[keyword].get('other_names')
     matches = []
@@ -161,12 +173,8 @@ def find_best_match_by_user_input(keyword: str, choices: List[str]):
 
 
 def find_lab_by_name(lab_other_name: str) -> Union[str, None]:
-    for key in master_data:
-        other_names = master_data[key].get('other_names') or []
-        if lab_other_name in other_names:
-            return key
-
-    return None
+    print(reversed_master_data)
+    return reversed_master_data[lab_other_name]
 
 
 def find_best_match_lab(keyword: str) -> Union[str, None]:
@@ -182,4 +190,4 @@ def find_best_match_lab(keyword: str) -> Union[str, None]:
         return None
 
 
-print(find_best_match_by_user_input('rrrbc nè', samples))
+print(find_best_match_by_user_input('rrrbC', samples))
